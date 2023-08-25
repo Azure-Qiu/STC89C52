@@ -1,0 +1,148 @@
+C51 COMPILER V9.60.0.0   SMG                                                               04/13/2023 19:39:49 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SMG
+OBJECT MODULE PLACED IN .\Objects\smg.obj
+COMPILER INVOKED BY: D:\MDK5\C51\BIN\C51.EXE smg.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\smg.lst)
+                    - OBJECT(.\Objects\smg.obj)
+
+line level    source
+
+   1          #include "smg.h"
+   2          
+   3          
+   4          
+   5          //共阴极数码管字形码编码
+   6          u8 code smgduan[] = {0x3f,0x06,0x5b,0x4f,0x66, //0 1 2 3 4
+   7                                                   0x6d,0x7d,0x07,0x7f,0x6f, //5 6 7 8 9
+   8                                                   0x77,0x7c,0x58,0x5e,0x79, //A b c d E
+   9                                                   0x71,0x76,0x30,0x0e,0x38, //F H I J L
+  10                                                   0x54,0x3f,0x73,0x67,0x50, //n o p q r
+  11                                                   0x6d,0x3e,0x3e,0x6e};     //s U v y  
+  12          
+  13                                                   
+  14          // 位选引脚，与38译码器相连
+  15          sbit A1 = P2^2;
+  16          sbit A2 = P2^3;
+  17          sbit A3 = P2^4;
+  18          
+  19          /**
+  20             *  @brief 指定第几个数码管点亮，38译码器控制位选（不对外声明）
+  21             *  @param pos：从左至右，数码管位置 1~8
+  22             *  @retval 无
+  23             */
+  24          void select_38(u8 pos){
+  25   1              u8 temp_pos = 8 - pos; // 0~7
+  26   1              A1 = temp_pos % 2; //高位
+  27   1              temp_pos /= 2;
+  28   1              A2 = temp_pos % 2; 
+  29   1              temp_pos /= 2;
+  30   1              A3 = temp_pos % 2; //低位
+  31   1      }
+  32          
+  33          /**
+  34             *  @brief 解析数据并取得相应数码管字形码编码
+  35             *  @param dat:想要显示的字符
+  36             *  @retval 对应字形码编码值
+  37             */
+  38          u8 parse_data(u8 dat){
+  39   1              switch(dat){
+  40   2                      case 0:
+  41   2                      case 1:
+  42   2                      case 2:
+  43   2                      case 3:
+  44   2                      case 4:
+  45   2                      case 5:
+  46   2                      case 6:
+  47   2                      case 7:
+  48   2                      case 8:
+  49   2                      case 9:return smgduan[dat];
+  50   2                      case 'a':
+  51   2                      case 'A':return smgduan[10];
+  52   2                      case 'b':
+  53   2                      case 'B':return smgduan[11];
+  54   2                      case 'c':
+C51 COMPILER V9.60.0.0   SMG                                                               04/13/2023 19:39:49 PAGE 2   
+
+  55   2                      case 'C':return smgduan[12];
+  56   2                      case 'd':
+  57   2                      case 'D':return smgduan[13];
+  58   2                      case 'e':
+  59   2                      case 'E':return smgduan[14];
+  60   2                      case 'f':
+  61   2                      case 'F':return smgduan[15];
+  62   2                      case 'h':
+  63   2                      case 'H':return smgduan[16];
+  64   2                      case 'i':
+  65   2                      case 'I':return smgduan[17];
+  66   2                      case 'j':
+  67   2                      case 'J':return smgduan[18];
+  68   2                      case 'l':
+  69   2                      case 'L':return smgduan[19];
+  70   2                      case 'n':
+  71   2                      case 'N':return smgduan[20];
+  72   2                      case 'o':
+  73   2                      case 'O':return smgduan[21];
+  74   2                      case 'p':
+  75   2                      case 'P':return smgduan[22];
+  76   2                      case 'q':
+  77   2                      case 'Q':return smgduan[23];
+  78   2                      case 'r':
+  79   2                      case 'R':return smgduan[24];
+  80   2                      case 's':
+  81   2                      case 'S':return smgduan[25];
+  82   2                      case 'u':
+  83   2                      case 'U':return smgduan[26];
+  84   2                      case 'v':
+  85   2                      case 'V':return smgduan[27];
+  86   2                      case 'y':
+  87   2                      case 'Y':return smgduan[28];
+  88   2                      default:return 0x00; //不显示
+  89   2              }
+  90   1      }
+  91          
+  92          
+  93          /**
+  94             *  @brief 显示一个字符（1字节）
+  95             *  @param dat：字符数据
+  96             *  @param pos：显示位置 1~8
+  97             *  @retval 无
+  98             */
+  99          void smg_showChar(u8 dat, u8 pos){
+ 100   1              // 解析点亮哪一个数码管
+ 101   1              select_38(pos);
+ 102   1              // 解析数据
+ 103   1              SMG_PORT = parse_data(dat);
+ 104   1      }
+ 105          
+ 106          
+ 107          /**
+ 108             *  @brief 显示字符串（动态显示）
+ 109             *  @param
+ 110             *  @retval
+ 111             */
+ 112          void smg_showString(u8 dat[], u8 pos){
+ 113   1              u8 i;
+ 114   1              // 超出部分直接截断
+ 115   1              for(i=0;(i<9-pos )&&(dat[i]!='\0');i++){
+ 116   2                      smg_showChar(dat[i], pos+i);
+C51 COMPILER V9.60.0.0   SMG                                                               04/13/2023 19:39:49 PAGE 3   
+
+ 117   2                      delay_10us(100); //延时1ms
+ 118   2                      SMG_PORT = 0x00; //消影
+ 119   2              }
+ 120   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    362    ----
+   CONSTANT SIZE    =     29    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       5
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

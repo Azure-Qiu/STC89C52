@@ -1,0 +1,161 @@
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                    08/23/2023  20:26:41  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.4.0, INVOKED BY:
+C:\SOFTWARE\KEIL\C51\BIN\BL51.EXE .\Objects\main.obj, .\Objects\delay.obj, .\Objects\led.obj TO .\Objects\project PRINT 
+>> (.\Listings\project.m51) RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\main.obj (MAIN)
+  .\Objects\delay.obj (DELAY)
+  .\Objects\led.obj (LED)
+  C:\SOFTWARE\KEIL\C51\LIB\C51S.LIB (?C_STARTUP)
+
+
+LINK MAP OF MODULE:  .\Objects\project (MAIN)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0003H     UNIT         ?DT?_LED_STREAM?LED
+            DATA    000BH     0003H     UNIT         _DATA_GROUP_
+            IDATA   000EH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0032H     UNIT         ?PR?_LED_STREAM?LED
+            CODE    0035H     0026H     UNIT         ?PR?_LED_RUN?LED
+            CODE    005BH     0018H     UNIT         ?PR?_DELAY_MS?DELAY
+            CODE    0073H     0011H     UNIT         ?PR?_LED_ON?LED
+            CODE    0084H     0010H     UNIT         ?PR?_LED_OFF?LED
+            CODE    0094H     000CH     UNIT         ?C_C51STARTUP
+            CODE    00A0H     000BH     UNIT         ?PR?_DELAY_10US?DELAY
+            CODE    00ABH     0009H     UNIT         ?PR?MAIN?MAIN
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\project (MAIN)
+
+
+SEGMENT                          DATA_GROUP 
+  +--> CALLED SEGMENT          START    LENGTH
+----------------------------------------------
+?C_C51STARTUP                  -----    -----
+  +--> ?PR?MAIN?MAIN
+
+?PR?MAIN?MAIN                  -----    -----
+  +--> ?PR?_LED_RUN?LED
+
+?PR?_LED_RUN?LED               000BH    0003H
+  +--> ?PR?_LED_ON?LED
+  +--> ?PR?_DELAY_10US?DELAY
+  +--> ?PR?_LED_OFF?LED
+
+
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  08/23/2023  20:26:41  PAGE 2
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\project (MAIN)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        MAIN
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  C:00ABH         PUBLIC        main
+  -------         PROC          MAIN
+  C:00ABH         LINE#         9
+  C:00ABH         LINE#         12
+  C:00ABH         LINE#         18
+  C:00B2H         LINE#         19
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        MAIN
+
+  -------         MODULE        DELAY
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  C:00A0H         PUBLIC        _delay_10us
+  C:005BH         PUBLIC        _delay_ms
+  -------         PROC          _DELAY_10US
+  D:0006H         SYMBOL        t
+  C:00A0H         LINE#         8
+  C:00A0H         LINE#         9
+  C:00AAH         LINE#         10
+  -------         ENDPROC       _DELAY_10US
+  -------         PROC          _DELAY_MS
+  D:0002H         SYMBOL        t
+  C:005BH         LINE#         17
+  C:005FH         LINE#         18
+  C:0069H         LINE#         19
+  C:0070H         LINE#         20
+  C:0072H         LINE#         21
+  -------         ENDPROC       _DELAY_MS
+  -------         ENDMOD        DELAY
+
+  -------         MODULE        LED
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:00A0H         PUBLIC        P2
+  C:0003H         PUBLIC        _led_stream
+  C:0084H         PUBLIC        _led_off
+  C:0035H         PUBLIC        _led_run
+  C:0073H         PUBLIC        _led_on
+  -------         PROC          _LED_ON
+  D:0007H         SYMBOL        pos
+  C:0073H         LINE#         14
+  C:0073H         LINE#         15
+  C:0083H         LINE#         16
+  -------         ENDPROC       _LED_ON
+  -------         PROC          _LED_OFF
+  D:0007H         SYMBOL        pos
+  C:0084H         LINE#         24
+  C:0084H         LINE#         25
+  C:0093H         LINE#         26
+  -------         ENDPROC       _LED_OFF
+  -------         PROC          _LED_STREAM
+BL51 BANKED LINKER/LOCATER V6.22.4.0                                                  08/23/2023  20:26:41  PAGE 3
+
+
+  D:0008H         SYMBOL        time
+  -------         DO            
+  D:000AH         SYMBOL        i
+  -------         ENDDO         
+  C:0003H         LINE#         34
+  C:0007H         LINE#         36
+  C:000AH         LINE#         37
+  C:0011H         LINE#         38
+  C:0018H         LINE#         39
+  C:0021H         LINE#         42
+  C:0024H         LINE#         43
+  C:002BH         LINE#         44
+  C:0034H         LINE#         45
+  -------         ENDPROC       _LED_STREAM
+  -------         PROC          _LED_RUN
+  D:000BH         SYMBOL        time
+  -------         DO            
+  D:000DH         SYMBOL        i
+  -------         ENDDO         
+  C:0035H         LINE#         54
+  C:0039H         LINE#         56
+  C:003CH         LINE#         57
+  C:0043H         LINE#         58
+  C:004AH         LINE#         59
+  C:0051H         LINE#         60
+  C:005AH         LINE#         61
+  -------         ENDPROC       _LED_RUN
+  -------         ENDMOD        LED
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?DELAY
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LED_STREAM?LED
+
+Program Size: data=15.0 xdata=0 code=180
+LINK/LOCATE RUN COMPLETE.  2 WARNING(S),  0 ERROR(S)
